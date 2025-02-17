@@ -54,10 +54,22 @@ class CountryCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Display the name of the country
-            Text(
-              country.name,
-              style: Theme.of(context).textTheme.headlineMedium,
+            // Display the name and capital of the country
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  country.name,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                Text(
+                 country.capital,
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

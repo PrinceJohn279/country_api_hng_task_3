@@ -13,6 +13,11 @@ class AppTheme {
     primaryColor: Colors.deepPurple,
     scaffoldBackgroundColor: Colors.white,
     textTheme: MyTextTheme.lightTextTheme,
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      iconTheme: IconThemeData(color: Colors.black),
+    ),
   );
 
 // DARK THEME
