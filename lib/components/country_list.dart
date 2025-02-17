@@ -71,25 +71,23 @@ class _CountryListState extends State<CountryList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.only(bottom: 30),
-          child: Container(
-            height: 40,
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 246, 244, 244),
-              border: Border.all(color: const Color.fromARGB(255, 246, 244, 244)),
-              borderRadius: BorderRadius.circular(3),
-            ),
-            child: TextField(
+        title: Container(
+          height: 50,
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 246, 244, 244),
+            border: Border.all(color: const Color.fromARGB(255, 246, 244, 244)),
+            borderRadius: BorderRadius.circular(3),
+          ),
+          child: TextField(
+              textAlign: TextAlign.center,
               decoration: InputDecoration(
-                border: InputBorder.none,
-                prefixIcon: Icon(Iconsax.search_normal_1, color: Colors.grey),
-                hintText: 'Search countries...',
-                hintStyle: TextStyle(color: Colors.grey),
-                contentPadding: EdgeInsets.symmetric(vertical: 10),
-              ),
-              onChanged: updateSearchQuery,
+              border: InputBorder.none,
+              prefixIcon: Icon(Iconsax.search_normal_1, color: Colors.grey,),
+              hintText: 'Search countries...',
+              hintStyle: TextStyle(color: Colors.grey),
+              contentPadding: EdgeInsets.symmetric(vertical: 10),
             ),
+            onChanged: updateSearchQuery,
           ),
         ),
       ),
