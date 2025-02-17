@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:country_api_hng_task_3/components/country_card.dart';
 import 'package:country_api_hng_task_3/model/country.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:iconsax/iconsax.dart';
 
 // StatefulWidget to display a list of countries
 class CountryList extends StatefulWidget {
@@ -24,8 +26,7 @@ Future<List<Country>> fetchCountries() async {
     // Decode the JSON response
     List jsonResponse = json.decode(response.body);
     if (kDebugMode) {
-      print(jsonResponse);
-    }
+      print(jsonResponse);    }
     // Map the JSON data to a list of Country objects
     return jsonResponse.map((data) => Country.fromJson(data)).toList();
   } else {
@@ -41,34 +42,73 @@ Future<List<Country>> fetchCountries() async {
 // State class for CountryList
 class _CountryListState extends State<CountryList> {
   late Future<List<Country>> countries;
+  List<Country> filteredCountries = [];
+  String searchQuery = "";
 
   @override
   void initState() {
     super.initState();
     // Fetch the list of countries when the widget is initialized
     countries = fetchCountries();
+    countries.then((value) {
+      setState(() {
+        filteredCountries = value;
+      });
+    });
+  }
+
+  void updateSearchQuery(String query) {
+    setState(() {
+      searchQuery = query;
+      filteredCountries = filteredCountries
+          .where((country) =>
+              country.name.toLowerCase().contains(searchQuery.toLowerCase()))
+          .toList();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: countries,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('No countries found'));
-        } else {
-          return ListView.builder(
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) {
-              return CountryCard(country: snapshot.data![index]);
-            },
-          );
-        }
-      },
+    return Scaffold(
+      appBar: AppBar(
+        title: Container(
+          height: 40,
+          decoration: BoxDecoration(
+            color: Theme.of(context).appBarTheme.backgroundColor,
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: TextField(
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              prefixIcon: Icon(Iconsax.search_normal_1, color: Colors.grey),
+              hintText: 'Search countries...',
+              hintStyle: TextStyle(color: Colors.grey),
+              contentPadding: EdgeInsets.symmetric(vertical: 10),
+            ),
+            onChanged: updateSearchQuery,
+          ),
+        ),
+      ),
+      body: FutureBuilder<List<Country>>(
+        future: countries,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No countries found'));
+          } else {
+            return ListView.builder(
+              itemCount: filteredCountries.length,
+              itemBuilder: (context, index) {
+                return CountryCard(country: filteredCountries[index]);
+              },
+            );
+          }
+        },
+      ),
     );
   }
 }
